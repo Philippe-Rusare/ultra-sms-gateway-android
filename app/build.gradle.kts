@@ -1,7 +1,26 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
 }
+
+/**
+ * Release signing key, never committed. Read from keystore.properties at the project root
+ * (storeFile, storePassword, keyAlias, keyPassword), or from the environment variables
+ * RELEASE_STORE_FILE, RELEASE_STORE_PASSWORD, RELEASE_KEY_ALIAS and RELEASE_KEY_PASSWORD (CI).
+ * Without them, release builds are produced unsigned.
+ */
+val releaseSigning: Map<String, String?> = Properties().let { properties ->
+    rootProject.file("keystore.properties").takeIf { it.exists() }?.inputStream()?.use { properties.load(it) }
+    mapOf(
+        "storeFile" to (properties.getProperty("storeFile") ?: System.getenv("RELEASE_STORE_FILE")),
+        "storePassword" to (properties.getProperty("storePassword") ?: System.getenv("RELEASE_STORE_PASSWORD")),
+        "keyAlias" to (properties.getProperty("keyAlias") ?: System.getenv("RELEASE_KEY_ALIAS")),
+        "keyPassword" to (properties.getProperty("keyPassword") ?: System.getenv("RELEASE_KEY_PASSWORD")),
+    )
+}
+val hasReleaseSigning = releaseSigning.values.all { !it.isNullOrBlank() }
 
 android {
     namespace = "com.ultracoresoft.ultrasmsgateway"
@@ -22,8 +41,22 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        if (hasReleaseSigning) {
+            create("release") {
+                storeFile = file(releaseSigning.getValue("storeFile")!!)
+                storePassword = releaseSigning["storePassword"]
+                keyAlias = releaseSigning["keyAlias"]
+                keyPassword = releaseSigning["keyPassword"]
+            }
+        }
+    }
+
     buildTypes {
         release {
+            if (hasReleaseSigning) {
+                signingConfig = signingConfigs.getByName("release")
+            }
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

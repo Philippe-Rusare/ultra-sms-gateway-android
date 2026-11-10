@@ -47,6 +47,26 @@ bundle instead of a commercial SMS API.
 
 The app is installed by hand: Google Play does not allow apps that send SMS for a server.
 
+### From a release (recommended)
+
+1. On the phone, open the [latest release](https://github.com/Philippe-Rusare/ultra-sms-gateway-android/releases/latest)
+   and download `ultra-sms-gateway-<version>.apk`.
+2. Open the file. Android asks to allow installs from your browser or file manager the first time: allow it,
+   then install.
+3. Updates: download the new APK and install it over the old one; settings are kept.
+
+Or from a computer, with the phone connected by USB and USB debugging enabled:
+
+```bash
+adb install -r ultra-sms-gateway-0.1.0.apk
+```
+
+Release APKs are signed with the project's release key. A version you built yourself in debug mode is
+signed with another key: uninstall it before installing a release (the server URL and token must then be
+entered again).
+
+### From the sources
+
 1. Build the APK (JDK 17 or later, or Android Studio):
 
    ```bash
@@ -126,6 +146,25 @@ The connection protocol is the contract with the server: it is documented in the
 ./gradlew testDebugUnitTest   # unit tests (protocol, engine, result codes)
 ./gradlew assembleDebug       # debug APK
 ```
+
+### Release builds (maintainers)
+
+`./gradlew assembleRelease` signs the APK with the release key when it finds one, either in a
+`keystore.properties` file at the project root (never committed):
+
+```properties
+storeFile=/absolute/path/to/ultra-sms-gateway-release.jks
+storePassword=...
+keyAlias=ultra-sms-gateway
+keyPassword=...
+```
+
+or in the environment variables `RELEASE_STORE_FILE`, `RELEASE_STORE_PASSWORD`, `RELEASE_KEY_ALIAS` and
+`RELEASE_KEY_PASSWORD` (for CI). Without a key, the release APK is left unsigned. The key and its password
+must be backed up: an app signed with a lost key can never be updated in place on the phones.
+
+To publish a version: raise `versionCode` and `versionName` in `app/build.gradle.kts`, add it to
+[CHANGELOG.md](CHANGELOG.md), build, then attach the APK to a GitHub release tagged `v<version>`.
 
 To try the app without a real server, start the server's demo profile on your computer
 (see [Try it without a phone](https://github.com/Philippe-Rusare/ultra-sms-gateway#try-it-without-a-phone))
