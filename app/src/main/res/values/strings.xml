@@ -1,3 +1,46 @@
 <resources>
-    <string name="app_name">Ultra-sms-gateway-android</string>
+    <string name="app_name">Ultra SMS Gateway</string>
+    <string name="notification_channel">Gateway connection</string>
+
+    <string name="state_stopped">Stopped</string>
+    <string name="state_connecting">Connecting…</string>
+    <string name="state_connected">Connected, ready to send</string>
+    <string name="state_waiting_retry">Disconnected, retrying soon</string>
+    <string name="state_unauthorized">Token refused by the server</string>
+    <string name="state_revoked">Device revoked in the dashboard</string>
+
+    <string name="section_status">Status</string>
+    <string name="status_device">Device</string>
+    <string name="status_waiting">Waiting on this phone</string>
+    <string name="status_sent_today">Sent today</string>
+    <string name="status_last_error">Last error</string>
+    <string name="status_retry_in">Next attempt in %1$d s</string>
+
+    <string name="section_server">Server</string>
+    <string name="server_url_label">Server URL</string>
+    <string name="server_url_hint">Copy it from Devices in the dashboard.</string>
+    <string name="token_label">Device token</string>
+    <string name="token_saved">A token is saved. Enter a new one only to replace it.</string>
+    <string name="token_none">Paste the token shown once in the dashboard.</string>
+    <string name="sim_label">SIM card</string>
+    <string name="sim_default">Default SIM</string>
+    <string name="sim_permission_needed">Allow reading the SIM cards to choose one.</string>
+    <string name="save">Save</string>
+    <string name="saved">Saved.</string>
+    <string name="error_url">The URL must start with wss:// (or ws:// for a local test).</string>
+    <string name="error_token">A device token starts with usgd_.</string>
+    <string name="warning_cleartext">ws:// is not encrypted: use wss:// in production.</string>
+
+    <string name="section_permissions">Permissions</string>
+    <string name="perm_sms">Send SMS</string>
+    <string name="perm_phone">Read the SIM cards</string>
+    <string name="perm_notifications">Show the notification</string>
+    <string name="perm_battery">Ignore battery optimisation</string>
+    <string name="grant">Allow</string>
+    <string name="granted">Allowed</string>
+
+    <string name="start">Start the gateway</string>
+    <string name="stop">Stop the gateway</string>
+    <string name="start_hint">Save the server settings and allow sending SMS first.</string>
+    <string name="footer">Version %1$s · message texts are never shown or logged.</string>
 </resources>

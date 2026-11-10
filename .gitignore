@@ -1,15 +1,50 @@
-*.iml
-.gradle
+### Build ###
+.gradle/
+.kotlin/
+/build
+/app/build
+/captures
+.externalNativeBuild
+.cxx
+*.apk
+*.aab
+
+### Local configuration and secrets ###
+local.properties
 /local.properties
+keystore.properties
+*.jks
+*.keystore
+.env
+.env.*
+google-services.json
+
+### AI assistants (local memory, settings and notes) ###
+.claude/
+CLAUDE.local.md
+.cursor/
+.aider*
+.continue/
+.windsurf/
+
+### IntelliJ / Android Studio ###
+*.iml
 /.idea/caches
 /.idea/libraries
 /.idea/modules.xml
 /.idea/workspace.xml
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
+/.idea/deploymentTargetSelector.xml
+/.idea/deviceManager.xml
+/.idea/appInsightsSettings.xml
+/.idea/studiobot.xml
+
+### Logs and temporary files ###
+*.log
+*.tmp
+*~
+
+### OS ###
 .DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
-local.properties
+Thumbs.db

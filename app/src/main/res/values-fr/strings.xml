@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">Ultra SMS Gateway</string>
+    <string name="notification_channel">Connexion à la passerelle</string>
+
+    <string name="state_stopped">Arrêtée</string>
+    <string name="state_connecting">Connexion…</string>
+    <string name="state_connected">Connectée, prête à envoyer</string>
+    <string name="state_waiting_retry">Déconnectée, nouvel essai bientôt</string>
+    <string name="state_unauthorized">Jeton refusé par le serveur</string>
+    <string name="state_revoked">Appareil révoqué dans le tableau de bord</string>
+
+    <string name="section_status">État</string>
+    <string name="status_device">Appareil</string>
+    <string name="status_waiting">En attente sur ce téléphone</string>
+    <string name="status_sent_today">Envoyés aujourd’hui</string>
+    <string name="status_last_error">Dernière erreur</string>
+    <string name="status_retry_in">Nouvel essai dans %1$d s</string>
+
+    <string name="section_server">Serveur</string>
+    <string name="server_url_label">Adresse du serveur</string>
+    <string name="server_url_hint">Copiez-la depuis Devices dans le tableau de bord.</string>
+    <string name="token_label">Jeton de l’appareil</string>
+    <string name="token_saved">Un jeton est enregistré. N’en saisissez un nouveau que pour le remplacer.</string>
+    <string name="token_none">Collez le jeton affiché une seule fois dans le tableau de bord.</string>
+    <string name="sim_label">Carte SIM</string>
+    <string name="sim_default">SIM par défaut</string>
+    <string name="sim_permission_needed">Autorisez la lecture des cartes SIM pour en choisir une.</string>
+    <string name="save">Enregistrer</string>
+    <string name="saved">Enregistré.</string>
+    <string name="error_url">L’adresse doit commencer par wss:// (ou ws:// pour un test local).</string>
+    <string name="error_token">Un jeton d’appareil commence par usgd_.</string>
+    <string name="warning_cleartext">ws:// n’est pas chiffré : utilisez wss:// en production.</string>
+
+    <string name="section_permissions">Autorisations</string>
+    <string name="perm_sms">Envoyer des SMS</string>
+    <string name="perm_phone">Lire les cartes SIM</string>
+    <string name="perm_notifications">Afficher la notification</string>
+    <string name="perm_battery">Ignorer l’optimisation de la batterie</string>
+    <string name="grant">Autoriser</string>
+    <string name="granted">Autorisé</string>
+
+    <string name="start">Démarrer la passerelle</string>
+    <string name="stop">Arrêter la passerelle</string>
+    <string name="start_hint">Enregistrez d’abord le serveur et autorisez l’envoi de SMS.</string>
+    <string name="footer">Version %1$s · le texte des messages n’est jamais affiché ni journalisé.</string>
+</resources>
