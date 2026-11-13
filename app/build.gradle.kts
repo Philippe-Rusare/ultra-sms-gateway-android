@@ -35,8 +35,8 @@ android {
         // Android 8: java.time for the server dates, notification channels, startForegroundService.
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 2
+        versionName = "0.2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -89,9 +89,12 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.okhttp)
+    // QR code scanner for pairing; self-contained, no Google Play services needed.
+    implementation(libs.zxing.android.embedded)
     implementation(libs.kotlinx.coroutines.android)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.okhttp.mockwebserver)
     // The real org.json for JVM tests; on the device, Android provides it.
     testImplementation(libs.org.json)
     androidTestImplementation(platform(libs.androidx.compose.bom))

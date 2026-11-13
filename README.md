@@ -25,7 +25,7 @@ This app keeps a connection open to that server, receives the messages, sends th
 card, and reports back whether each one was sent and delivered. You pay the price of your operator's SMS
 bundle instead of a commercial SMS API.
 
-- **One screen**: server address, device token, SIM card, permissions, start and stop.
+- **One screen**: pairing by QR code, SIM card, permissions, start and stop.
 - **Runs with the screen off**: a foreground service keeps the connection alive, reconnects on its own and
   starts again after a reboot or an update.
 - **Nothing is lost or sent twice**: results are stored on the phone until the server receives them, and a
@@ -83,9 +83,11 @@ entered again).
 
 ## Set up
 
-1. In the server dashboard, open **Devices → Add device**. Copy the **server URL** and the **device token**
-   (shown only once).
-2. In the app, paste them and tap **Save**. Use `wss://` in production; `ws://` is only for a local test.
+1. In the server dashboard, open **Devices → Add device with a QR code**.
+2. In the app, tap **Scan the QR code** and point the camera at it: the server address and the device token
+   are set for you. The code works once and expires after 10 minutes. (A phone that cannot scan can open the
+   link shown under the QR code, or you can type the server URL and a token by hand. Use `wss://` in
+   production; `ws://` is only for a local test.)
 3. Under **Permissions**, allow each line: sending SMS, reading the SIM cards (to choose one), the
    notification and the battery optimisation exemption.
 4. On a dual-SIM phone, choose the SIM card with the SMS bundle.
@@ -134,6 +136,7 @@ GatewayService (foreground)
 | `net` | WebSocket client: reconnection with a growing delay, heartbeat. |
 | `sms` | Sending through `SmsManager` and reading its results. |
 | `service` | Foreground service and restart after boot. |
+| `pairing` | Reads the pairing link of the QR code and exchanges its code for the device token. |
 | `config` | Settings and the encrypted device token. |
 | `ui` | The Compose screen. |
 

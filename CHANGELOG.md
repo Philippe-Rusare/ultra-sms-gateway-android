@@ -4,6 +4,19 @@ All notable changes to the Android app. Versions follow [Semantic Versioning](ht
 the device protocol it speaks is documented in the
 [server repository](https://github.com/Philippe-Rusare/ultra-sms-gateway/blob/main/docs/device-protocol.md).
 
+## [0.2.0] - unreleased
+
+### Added
+
+- Pairing by QR code: **Scan the QR code** reads the code shown by the dashboard and receives the server
+  address and the device token, with nothing to type. Needs a server with the pairing endpoint
+  (`POST /v1/device/pair`).
+- The pairing link (`ultrasms://pair?...`) can also be opened directly on a phone that cannot scan.
+
+### Changed
+
+- The camera permission is requested when scanning. Typing the server URL and a token by hand still works.
+
 ## [0.1.0] - 2026-11-10
 
 First release, for developers and early testers.

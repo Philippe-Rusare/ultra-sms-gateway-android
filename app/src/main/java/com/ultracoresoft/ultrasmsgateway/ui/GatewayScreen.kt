@@ -68,15 +68,22 @@ import com.ultracoresoft.ultrasmsgateway.device.SimCard
 import com.ultracoresoft.ultrasmsgateway.device.SimCards
 import com.ultracoresoft.ultrasmsgateway.engine.ConnectionState
 import com.ultracoresoft.ultrasmsgateway.engine.GatewayEngine
+import com.ultracoresoft.ultrasmsgateway.pairing.PairingClient
+import com.ultracoresoft.ultrasmsgateway.pairing.PairingLink
+import com.ultracoresoft.ultrasmsgateway.pairing.PairingResult
 import com.ultracoresoft.ultrasmsgateway.service.GatewayService
 import java.time.LocalDate
 import java.time.ZoneId
+import com.journeyapps.barcodescanner.ScanContract
+import com.journeyapps.barcodescanner.ScanOptions
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /** The only screen: state, server settings, permissions, start and stop. */
 @Composable
-fun GatewayScreen() {
+fun GatewayScreen(incomingPairingLink: String? = null, onPairingLinkHandled: () -> Unit = {}) {
     val context = LocalContext.current
     val app = remember { GatewayApp.from(context) }
     val settings = app.settings
@@ -120,7 +127,7 @@ fun GatewayScreen() {
 
             StatusCard(status.state, status.deviceId, status.lastError, status.nextRetryAtMillis, now, counters)
 
-            ServerCard(settings, sims, permissions.phone) {
+            ServerCard(settings, sims, permissions.phone, incomingPairingLink, onPairingLinkHandled) {
                 if (settings.enabled) {
                     // Apply the new settings to the running gateway.
                     GatewayService.stop(context)
@@ -192,18 +199,83 @@ private fun StatusCard(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ServerCard(settings: GatewaySettings, sims: List<SimCard>, canReadSims: Boolean, onSaved: () -> Unit) {
+private fun ServerCard(
+    settings: GatewaySettings,
+    sims: List<SimCard>,
+    canReadSims: Boolean,
+    incomingPairingLink: String?,
+    onPairingLinkHandled: () -> Unit,
+    onSaved: () -> Unit,
+) {
     var url by remember { mutableStateOf(settings.serverUrl) }
     var token by remember { mutableStateOf("") }
     var subscription by remember { mutableIntStateOf(settings.subscriptionId) }
     var hasToken by remember { mutableStateOf(settings.hasToken) }
     var message by remember { mutableStateOf<Int?>(null) }
     var simMenuOpen by remember { mutableStateOf(false) }
+    var pairing by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
+
+    // Exchanges a scanned or opened pairing link for the device token, then stores the settings.
+    fun pair(text: String?) {
+        val link = PairingLink.parse(text)
+        if (link == null) {
+            message = R.string.error_qr_invalid
+            return
+        }
+        pairing = true
+        message = null
+        scope.launch {
+            val result = withContext(Dispatchers.IO) { PairingClient().pair(link) }
+            pairing = false
+            when (result) {
+                is PairingResult.Paired -> {
+                    settings.serverUrl = result.deviceUrl
+                    settings.saveToken(result.token)
+                    url = result.deviceUrl
+                    token = ""
+                    hasToken = true
+                    message = R.string.paired
+                    onSaved()
+                }
+                PairingResult.Rejected -> message = R.string.error_pairing_rejected
+                PairingResult.Failed -> message = R.string.error_pairing_failed
+            }
+        }
+    }
+
+    val scanPrompt = stringResource(R.string.scan_prompt)
+    val scanner = rememberLauncherForActivityResult(ScanContract()) { result ->
+        // A null content means the user left the scanner without scanning.
+        result.contents?.let { pair(it) }
+    }
+    LaunchedEffect(incomingPairingLink) {
+        if (incomingPairingLink != null) {
+            pair(incomingPairingLink)
+            onPairingLinkHandled()
+        }
+    }
 
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text(stringResource(R.string.section_server), style = MaterialTheme.typography.titleMedium)
+            Button(
+                onClick = {
+                    scanner.launch(
+                        ScanOptions()
+                            .setDesiredBarcodeFormats(ScanOptions.QR_CODE)
+                            .setPrompt(scanPrompt)
+                            .setBeepEnabled(false)
+                            .setOrientationLocked(false)
+                    )
+                },
+                enabled = !pairing,
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text(stringResource(if (pairing) R.string.pairing_in_progress else R.string.scan_qr))
+            }
+            Text(stringResource(R.string.manual_setup), style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant)
             OutlinedTextField(
                 value = url,
                 onValueChange = { url = it; message = null },
@@ -262,11 +334,11 @@ private fun ServerCard(settings: GatewaySettings, sims: List<SimCard>, canReadSi
             message?.let {
                 Text(
                     stringResource(it),
-                    color = if (it == R.string.saved) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
+                    color = if (it == R.string.saved || it == R.string.paired) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodySmall,
                 )
             }
-            Button(
+            OutlinedButton(
                 onClick = {
                     when {
                         !GatewaySettings.isValidServerUrl(url) -> message = R.string.error_url

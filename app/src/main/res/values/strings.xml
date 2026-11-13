@@ -17,6 +17,14 @@
     <string name="status_retry_in">Next attempt in %1$d s</string>
 
     <string name="section_server">Server</string>
+    <string name="scan_qr">Scan the QR code</string>
+    <string name="scan_prompt">Point the camera at the QR code shown in the dashboard</string>
+    <string name="pairing_in_progress">Pairing…</string>
+    <string name="paired">Paired. The phone is now a device of your gateway.</string>
+    <string name="manual_setup">Or enter the settings by hand:</string>
+    <string name="error_qr_invalid">This is not an Ultra SMS Gateway pairing code.</string>
+    <string name="error_pairing_rejected">This code has expired or was already used. Add the device again in the dashboard.</string>
+    <string name="error_pairing_failed">Could not reach the server. Check the connection and try again.</string>
     <string name="server_url_label">Server URL</string>
     <string name="server_url_hint">Copy it from Devices in the dashboard.</string>
     <string name="token_label">Device token</string>

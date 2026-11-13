@@ -17,6 +17,14 @@
     <string name="status_retry_in">Nouvel essai dans %1$d s</string>
 
     <string name="section_server">Serveur</string>
+    <string name="scan_qr">Scanner le QR code</string>
+    <string name="scan_prompt">Pointez la caméra vers le QR code affiché dans le tableau de bord</string>
+    <string name="pairing_in_progress">Appairage…</string>
+    <string name="paired">Appairé. Ce téléphone est maintenant un appareil de votre passerelle.</string>
+    <string name="manual_setup">Ou saisissez les réglages à la main :</string>
+    <string name="error_qr_invalid">Ce n’est pas un code d’appairage Ultra SMS Gateway.</string>
+    <string name="error_pairing_rejected">Ce code a expiré ou a déjà été utilisé. Ajoutez de nouveau l’appareil dans le tableau de bord.</string>
+    <string name="error_pairing_failed">Serveur injoignable. Vérifiez la connexion et réessayez.</string>
     <string name="server_url_label">Adresse du serveur</string>
     <string name="server_url_hint">Copiez-la depuis Devices dans le tableau de bord.</string>
     <string name="token_label">Jeton de l’appareil</string>
